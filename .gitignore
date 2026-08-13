@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary synthetic test directories
+_far_trans_synthetic/

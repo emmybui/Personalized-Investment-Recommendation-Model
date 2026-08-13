@@ -1,0 +1,136 @@
+================================================================================
+HUONG DAN CHAY VA KIEM THU DATA PIPELINE (WEEK 1-3) CHO MEO VA PU
+================================================================================
+
+1. GIAI THICH MUC DINH, Y NGHIA TUNG FILE TRONG THU MUC src/data/
+--------------------------------------------------------------------------------
+Thu muc `src/data/` chua toan bo logic xu ly du lieu, kiem tra chat luong va phan chia
+split cho mo hinh khuyen nghi RATGR. Cac file bao gom:
+
+- src/data/config.py:
+  * Quan ly centralized toan bo hang so, duong dan (PROCESSED_DIR, SPLITS_DIR), mốc
+    thoi gian Primary Split (Train <= 2021-12-31, Val: 2022-01-01 -> 2022-06-30, Test:
+    2022-07-01 -> 2022-11-29) va 5 moc 6-thang Auxiliary Rolling Windows.
+
+- src/data/loader.py:
+  * Entry point duy nhat (FARTransLoader) cho cac mo hinh downstream (Popularity, BPR,
+    LightGCN, TGN) doc 6 bang cleaned va cac bo splits (load_primary_split,
+    load_rolling_split). Chua ham build_id_mapping() tao anh xa index nguyen dong nhat.
+
+- src/data/validator.py:
+  * Thực thi Data Quality Policy: kiem tra schema, null primary key, transactionType
+    (Buy/Sell), units > 0, totalValue >= 0, deterministic sort order (timestamp, transactionID),
+    market referential integrity, va kiem tra ror i thoi gian (temporal leakage).
+
+- src/data/snapshot.py:
+  * Logic tric xuat thong tin Point-in-Time (PIT) tai moc cutoff t cho Customer, Asset,
+    va Close Prices mà KHONG bi ror i tuong lai. Xu ly conflict du lieu voi whitelist cho 3
+    ISIN ETF niem yet kep.
+
+- src/data/splitter.py:
+  * Thuc hien chia du lieu theo Primary Protocol (Train/Val/Test) va 5 cua so Auxiliary
+    Rolling windows, dong thoi luu cac file snapshot va summary tuong ung.
+
+- src/data/state.py:
+  * Tai cau truc trang thai danh muc dau tu (Holdings: net_units = BUY - SELL) tai
+    moi moc cutoff t. Cung cap ham get_candidate_assets() sinh tap ung vien khuyen nghi
+    Point-in-Time: C(u, t) = A(t) - H(u, t).
+
+- src/data/build_dataset.py:
+  * File dieu phoi chinh (Orchestrator). Chay luong: Load -> Validate -> Primary Split ->
+    Rolling Splits -> Compute Holdings & ID Mapping -> Leakage Checks -> Save Report.
+
+- src/data/__init__.py:
+  * Export cac class va helper function quan trong de import ngan gon tu `src.data`.
+
+2. HUONG DAN CAC BUOC CHAY TU DAU
+--------------------------------------------------------------------------------
+Luu y quan trong: Luon dung o THU MUC GOC CUA DU AN (`Personalized-Investment-Recommendation-Model`)
+khi chay cac lenh duoi day trong Terminal / Command Prompt.
+
+[BUOC 1] LAM SACH DU LIEU RAW (Data Cleaning)
+Command:
+    python data/processed/clean.py --input_dir data/raw --output_dir data/processed
+
+(Ghi chu: Neu chua co du lieu raw thuc te hoac muon chay thu nghiem nhanh voi du lieu gia,
+ chay lenh: python data/processed/clean.py --self_test)
+
+[BUOC 2] CHAY DATA PIPELINE CHINH (Build Dataset & Splits)
+Command:
+    python -m src.data.build_dataset
+
+Lenh nay se doc 6 file cleaned tu `data/processed/`, kiem tra chat luong, chia splits,
+tinh holdings, sinh ID mapping va kiem tra temporal leakage.
+
+[BUOC 3] CHAY KIEM THU TU DONG (Run Tests)
+Command 3a (Test logic Holdings & Candidate Generator):
+    python tests/test_holdings.py
+
+Command 3b (Test toan bo 84 tieu chi kiem thu Week 1-3):
+    python tests/test_week1_3.py
+
+3. KET QUA KHI CHAY DUNG (TRANG THAI THANH CONG)
+--------------------------------------------------------------------------------
+Neu pipeline va cac lenh test chay dung, he thong se dap ung tat ca cac muc sau:
+
+1. Thu muc `data/processed/` chua 6 file cleaned:
+   - customer_information_clean.csv
+   - asset_information_clean.csv
+   - markets_clean.csv
+   - close_prices_clean.csv
+   - limit_prices_clean.csv
+   - transactions_clean.csv
+
+2. Thu muc `data/splits/primary/` chua bo primary split:
+   - train_transactions.csv, validation_transactions.csv, test_transactions.csv
+   - train_customer_snapshot.csv, train_asset_snapshot.csv, train_prices.csv
+   - validation_customer_snapshot.csv, validation_asset_snapshot.csv, validation_prices.csv
+   - holdings_asof_train_end.csv, holdings_asof_validation_end.csv
+
+3. Thu muc `data/splits/rolling/` chua 5 thu muc cho 5 rolling windows:
+   - rolling_01_2020-01-01 ... rolling_05_2022-01-01
+   - Moi thu muc chua 6 file: train_transactions, test_transactions, customer_snapshot,
+     asset_snapshot, prices_upto_t, holdings_asof_cutoff.
+
+4. File `data/splits/id_mapping.json`:
+   - Chua bang anh xa index nguyen dong nhat (customer_to_idx, asset_to_idx) cho toan bo model.
+
+5. File `data/reports/data_quality_report.json`:
+   - Dat trang thai `"ok": true`, `"errors": []`, ror i du lieu primary va rolling deu ok.
+
+6. Output kiem thu Terminal:
+   - `test_holdings.py` in out: `[PASS] All holdings and point-in-time candidate edge-case tests passed!`
+   - `test_week1_3.py` in out: `Total: 84 | Passed: 84 | Failed: 0` va `>>> ALL TESTS PASSED <<<`
+
+
+4. CAC TRUONG HOP LOI DIEN HINH VA CACH FIX DON GIANG
+--------------------------------------------------------------------------------
+
+LOI 1: FileNotFoundError: Cannot find transactions.csv (hoac thieu file goc)
+- Nguyen nhan: Thu muc `data/raw/` chua co 6 file CSV goc hoac sai ten file.
+- Cach fix:
+  1. Kiem tra thu muc `data/raw/` da co 6 file goc dung ten chua.
+  2. Hoac neu muon test pipeline ma chua can data thuc te, chay lenh:
+     `python data/processed/clean.py --self_test`
+
+LOI 2: ModuleNotFoundError: No module named 'src'
+- Nguyen nhan: Chay lenh khi dang o trong thu muc con (nhu `cd src/data` hoac `cd data`).
+- Cach fix:
+  Chuyen ve dung thu muc goc cua du an `Personalized-Investment-Recommendation-Model` va
+  chay lenh bang cu phap `-m`:
+     `python -m src.data.build_dataset`
+
+LOI 3: ValueError: [table] ... duplicate (key, timestamp) rows have different content
+- Nguyen nhan: Vi pham Data Quality Policy -- co 2 dòng cung temporal key và timestamp nhung
+  noi dung khac nhau (conflict du lieu).
+- Cach fix:
+  Kiem tra file raw de lam sach ban ghi loi. Neu conflict den tu tai san ETF niem yet kep hop le,
+  them ISIN do vao hằng số `_KNOWN_ASSET_CONFLICT_ISINS` trong `src/data/snapshot.py`.
+
+LOI 4: LEAKAGE DETECTED (Report ok = False hoac test_week1_3.py FAILED)
+- Nguyen nhan: Co mieu ta du lieu bi vuot qua moc cutoff thoi gian cho phep.
+- Cach fix:
+  1. Kiem tra xem co file code nao bi thay doi moc thoi gian trong `src/data/config.py` hay khong.
+  2. Xoa thu muc `data/splits/` va chạy lai: `python -m src.data.build_dataset`
+
+================================================================================

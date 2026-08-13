@@ -1,0 +1,75 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    "assets: 6 rows belong to 3 known whitelisted (ISIN, timestamp) conflicts; resolved by keeping last",
+    "close_prices: 1 rows with unknown ISIN",
+    "limit_prices: 1 rows with unknown ISIN"
+  ],
+  "stats": {
+    "customers": {
+      "rows": 32468,
+      "columns": 8,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "assets": {
+      "rows": 836,
+      "columns": 9,
+      "missing_cells": 1121,
+      "duplicate_rows": 0
+    },
+    "markets": {
+      "rows": 38,
+      "columns": 8,
+      "missing_cells": 1,
+      "duplicate_rows": 0
+    },
+    "close_prices": {
+      "rows": 703303,
+      "columns": 3,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "limit_prices": {
+      "rows": 807,
+      "columns": 6,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "transactions": {
+      "rows": 359128,
+      "columns": 9,
+      "missing_cells": 0,
+      "duplicate_rows": 0,
+      "min_timestamp": "2018-01-02 00:00:00",
+      "max_timestamp": "2022-11-30 00:00:00"
+    }
+  },
+  "primary_leakage": {
+    "ok": true,
+    "issues": []
+  },
+  "rolling_leakage": [
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    }
+  ]
+}
