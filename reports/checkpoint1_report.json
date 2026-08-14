@@ -1,0 +1,181 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [],
+  "stats": {
+    "customers": {
+      "rows": 32468,
+      "columns": 8,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "assets": {
+      "rows": 833,
+      "columns": 9,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "markets": {
+      "rows": 38,
+      "columns": 8,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "close_prices": {
+      "rows": 703302,
+      "columns": 3,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "limit_prices": {
+      "rows": 806,
+      "columns": 6,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "transactions": {
+      "rows": 388048,
+      "columns": 9,
+      "missing_cells": 0,
+      "duplicate_rows": 0,
+      "globally_reused_transaction_ids": 23388,
+      "min_timestamp": "2018-01-02 00:00:00",
+      "max_timestamp": "2022-11-30 00:00:00"
+    }
+  },
+  "cleaning": {
+    "ok": true,
+    "transaction_key": [
+      "customerID",
+      "transactionID"
+    ],
+    "tables": {
+      "customers": {
+        "input_rows": 32468,
+        "output_rows": 32468,
+        "removed_rows": 0,
+        "missing_cells_after_cleaning": 0
+      },
+      "assets": {
+        "input_rows": 836,
+        "output_rows": 833,
+        "removed_rows": 3,
+        "missing_cells_after_cleaning": 0
+      },
+      "markets": {
+        "input_rows": 38,
+        "output_rows": 38,
+        "removed_rows": 0,
+        "missing_cells_after_cleaning": 0
+      },
+      "close_prices": {
+        "input_rows": 703303,
+        "output_rows": 703302,
+        "removed_rows": 1,
+        "missing_cells_after_cleaning": 0
+      },
+      "limit_prices": {
+        "input_rows": 807,
+        "output_rows": 806,
+        "removed_rows": 1,
+        "missing_cells_after_cleaning": 0
+      },
+      "transactions": {
+        "input_rows": 388048,
+        "output_rows": 388048,
+        "removed_rows": 0,
+        "missing_cells_after_cleaning": 0
+      }
+    },
+    "transactions": {
+      "unique_composite_keys": 388048,
+      "globally_reused_transaction_ids": 23388,
+      "min_timestamp": "2018-01-02 00:00:00",
+      "max_timestamp": "2022-11-30 00:00:00"
+    }
+  },
+  "primary_split": {
+    "train": {
+      "rows": 303899,
+      "customers": 27732,
+      "assets": 301,
+      "start": "2018-01-02 00:00:00",
+      "end": "2021-12-31 00:00:00"
+    },
+    "validation": {
+      "rows": 53788,
+      "customers": 8865,
+      "assets": 208,
+      "start": "2022-01-03 00:00:00",
+      "end": "2022-06-30 00:00:00"
+    },
+    "test": {
+      "rows": 30361,
+      "customers": 6030,
+      "assets": 200,
+      "start": "2022-07-01 00:00:00",
+      "end": "2022-11-30 00:00:00"
+    },
+    "coverage": {
+      "clean_transactions": 388048,
+      "assigned_rows": 388048,
+      "unassigned_rows": 0,
+      "ok": true
+    }
+  },
+  "cold_start_against_train_mapping": {
+    "validation": {
+      "rows": 53788,
+      "unknown_customer_rows": 1649,
+      "unknown_asset_rows": 1415,
+      "unknown_any_rows": 2664,
+      "unknown_customers": 911,
+      "unknown_assets": 10
+    },
+    "test": {
+      "rows": 30361,
+      "unknown_customer_rows": 1027,
+      "unknown_asset_rows": 1920,
+      "unknown_any_rows": 2602,
+      "unknown_customers": 569,
+      "unknown_assets": 13
+    }
+  },
+  "temporal_graph": {
+    "events": 303899,
+    "snapshot_edges": 80419,
+    "customers": 27732,
+    "assets": 301,
+    "as_of": "2021-12-31 23:59:59"
+  },
+  "baseline": {
+    "train_buy_pairs": 80419,
+    "mapping_fitted_on": "primary_train"
+  },
+  "primary_leakage": {
+    "ok": true,
+    "issues": []
+  },
+  "rolling_leakage": [
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    },
+    {
+      "ok": true,
+      "issues": []
+    }
+  ]
+}

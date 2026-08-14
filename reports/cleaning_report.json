@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "transaction_key": [
+    "customerID",
+    "transactionID"
+  ],
+  "tables": {
+    "customers": {
+      "input_rows": 32468,
+      "output_rows": 32468,
+      "removed_rows": 0,
+      "missing_cells_after_cleaning": 0
+    },
+    "assets": {
+      "input_rows": 836,
+      "output_rows": 833,
+      "removed_rows": 3,
+      "missing_cells_after_cleaning": 0
+    },
+    "markets": {
+      "input_rows": 38,
+      "output_rows": 38,
+      "removed_rows": 0,
+      "missing_cells_after_cleaning": 0
+    },
+    "close_prices": {
+      "input_rows": 703303,
+      "output_rows": 703302,
+      "removed_rows": 1,
+      "missing_cells_after_cleaning": 0
+    },
+    "limit_prices": {
+      "input_rows": 807,
+      "output_rows": 806,
+      "removed_rows": 1,
+      "missing_cells_after_cleaning": 0
+    },
+    "transactions": {
+      "input_rows": 388048,
+      "output_rows": 388048,
+      "removed_rows": 0,
+      "missing_cells_after_cleaning": 0
+    }
+  },
+  "transactions": {
+    "unique_composite_keys": 388048,
+    "globally_reused_transaction_ids": 23388,
+    "min_timestamp": "2018-01-02 00:00:00",
+    "max_timestamp": "2022-11-30 00:00:00"
+  }
+}
