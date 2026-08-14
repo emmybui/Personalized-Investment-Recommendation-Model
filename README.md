@@ -1,366 +1,169 @@
-# Personalised Investment Recommendation System using Temporal Graph Networks
-![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
-![LightFM](https://img.shields.io/badge/LightFM-Recommender-green)
-![TGN](https://img.shields.io/badge/Temporal_Graph_Network-TGN-orange)
-![License](https://img.shields.io/badge/License-Academic-lightgrey)
+# Personalized Investment Recommendation Model
 
-> Undergraduate Thesis Project | Computer Science
+Leakage-safe FAR-Trans data pipeline for temporal investor--asset recommendation.
 
-## Overview
+## Checkpoint 1 status
 
-This project is my undergraduate thesis, focusing on developing a personalised investment recommendation system for financial assets. The system recommends suitable investment products to individual users by learning their historical investment behaviour and interactions over time.
+The repository now provides reproducible code for all Checkpoint 1 deliverables:
 
-Unlike traditional recommendation systems that assume user preferences remain static, this project models dynamic user-item interactions using Temporal Graph Networks (TGN), allowing recommendations to adapt as user interests evolve.
+- cleaning the six FAR-Trans core CSV files;
+- point-in-time customer, asset, price, and holdings snapshots;
+- chronological Train/Validation/Test and five auxiliary rolling splits;
+- temporal investor--asset event graph plus an optional PyTorch Geometric adapter;
+- a train-fitted shared ID mapping, sparse baseline interactions, and batch loading;
+- machine-readable data-quality, leakage, split, graph, and cold-start reports.
 
-The project evaluates both traditional collaborative filtering methods and graph-based deep learning models to identify the most effective approach for personalised financial recommendations.
+The large source and generated datasets are intentionally ignored by Git. Only
+code, tests, protocol documentation, and small reproducibility reports belong in
+the repository.
 
----
+## FAR-Trans files
 
-## Objectives
+Download FAR-Trans from the [University of Glasgow repository](https://doi.org/10.5525/gla.researchdata.1658)
+and place these six files in `data/raw/`:
 
-- Build a personalised investment recommendation system
-- Understand user investment behaviour through historical interactions
-- Compare traditional and graph-based recommendation models
-- Improve recommendation quality using temporal information
-- Provide a scalable recommendation framework for financial services
-
----
-
-## Problem Statement
-
-Investment platforms often recommend products using static recommendation methods that cannot effectively capture changing user preferences over time.
-
-Since investment behaviour continuously evolves due to market conditions and personal financial goals, this project investigates whether temporal graph learning can generate more accurate and personalised recommendations than traditional recommendation algorithms.
-
----
-
-## Dataset
-
-This project uses the **FAR-Trans** dataset, the first publicly available benchmark dataset for **Financial Asset Recommendation (FAR)** research.
-
-The dataset contains anonymised transaction records collected from a large European financial institution, together with historical asset information and temporal interaction data. Its temporal nature makes it suitable for evaluating both traditional recommendation algorithms and dynamic graph-based models such as Temporal Graph Networks (TGN).
-
-### Dataset Contents
-
-- Investor IDs
-- Financial asset IDs
-- Transaction timestamps
-- Historical user–asset interactions
-- Asset information
-- Temporal investment behaviour
-
-### Dataset Access
-
-The dataset is publicly available for academic research.
-
-**Official Repository:** https://researchdata.gla.ac.uk/1658/
-
-**DOI:** https://doi.org/10.5525/gla.researchdata.1658
-
-Please download the dataset manually and place it under:
-
-```
-data/raw/
+```text
+customer_information.csv
+asset_information.csv
+markets.csv
+close_prices.csv
+limit_prices.csv
+transactions.csv
 ```
 
-The dataset is **not included** in this repository due to its large size.
----
+`questionnaires.csv` is not one of the six model tables and is not processed.
 
-## Methodology
+## Setup and run
 
-The overall workflow is shown below.
-
-```
-Raw Data
-    │
-    ▼
-Data Cleaning
-    │
-    ▼
-Feature Engineering
-    │
-    ▼
-Popularity Baseline
-    │
-    ▼
-LightFM Recommendation
-    │
-    ▼
-Temporal Graph Network (TGN)
-    │
-    ▼
-Model Evaluation
-    │
-    ▼
-Recommendation Results
-```
-
----
-
-## Models
-
-### 1. Popularity Model
-
-A simple baseline that recommends the most frequently interacted investment products.
-
-Purpose:
-
-- Baseline comparison
-- Fast implementation
-- Benchmark performance
-
----
-
-### 2. LightFM
-
-Hybrid collaborative filtering model combining user-item interactions with metadata.
-
-Advantages:
-
-- Handles sparse datasets
-- Learns latent representations
-- Strong collaborative filtering baseline
-
----
-
-### 3. Temporal Graph Network (TGN)
-
-The main model of this thesis.
-
-TGN captures dynamic interactions between users and investment products over time using graph neural networks.
-
-Advantages:
-
-- Models temporal behaviour
-- Learns evolving user preferences
-- Supports dynamic recommendation scenarios
-
----
-
-## Technologies
-
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- PyTorch
-- PyTorch Geometric
-- LightFM
-- Temporal Graph Networks (TGN)
-- Jupyter Notebook
-- Git
-- GitHub
-
----
-
-## Repository Structure
-
-```
-investment-recommendation-system/
-
-│
-├── configs/                 # Model configurations
-├── data/
-│   ├── raw/
-│   └── processed/
-│
-├── notebooks/               # Experiments
-├── src/
-│   ├── data/
-│   ├── features/
-│   ├── models/
-│   ├── evaluation/
-│   └── utils/
-│
-├── figures/                 # Architecture & diagrams
-├── models/                  # Saved models
-├── results/                 # Experimental results
-│
-├── requirements.txt
-├── README.md
-└── LICENSE
-```
-
----
-
-## Experimental Pipeline
-
-- Data preprocessing
-- Missing value handling
-- Feature engineering
-- Baseline implementation
-- LightFM training
-- TGN training
-- Hyperparameter tuning
-- Model evaluation
-- Recommendation generation
-
----
-
-## Evaluation Metrics
-
-The recommendation models are evaluated using ranking metrics including:
-
-- Precision@K
-- Recall@K
-- MAP@K
-- NDCG@K
-- Hit Rate
-
----
-
-## Results
-
-| Model | Precision@10 | Recall@10 | NDCG@10 |
-|---------|-------------|-----------|----------|
-| Popularity | - | - | - |
-| LightFM | - | - | - |
-| TGN | - | - | - |
-
-> Experimental results will be updated after model training.
-
----
-
-## Future Improvements
-
-Potential future work includes:
-
-- Real-time recommendation
-- Portfolio optimisation
-- Risk-aware recommendation
-- Explainable AI
-- Online learning
-- REST API deployment
-- Web application integration
-
----
-
-## Installation
-
-Clone the repository
+Python 3.11+ is recommended.
 
 ```bash
-git clone https://github.com/emmybui/investment-recommendation-system.git
-
-cd investment-recommendation-system
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-data.txt
+python -m src.data.build_dataset
+python -m unittest discover -s tests -v
 ```
 
-Create environment
+The build command runs the full pipeline:
+
+```text
+data/raw/ (6 CSVs)
+    -> cleaning + validation
+data/processed/ (6 generated clean CSVs)
+    -> point-in-time splitting + holdings
+data/splits/ (generated model inputs)
+    -> temporal graph + baseline interactions
+reports/ (small reproducibility summaries)
+```
+
+Use `--skip-clean` only when the six processed files were already generated by
+the current code:
 
 ```bash
-pip install -r requirements.txt
+python -m src.data.build_dataset --skip-clean
 ```
 
----
+## Primary temporal protocol
 
-## Run
+| Phase | Date range | Use |
+|---|---|---|
+| Train | 2018-01-02 to 2021-12-31 | fit models and all mappings/statistics |
+| Validation | 2022-01-01 to 2022-06-30 | tune hyperparameters |
+| Test | 2022-07-01 to 2022-11-30 | final evaluation only |
 
-Example
+The last date is `2022-11-30`, because the source transaction file contains 327
+events on that day. The exact full-data counts generated in this checkpoint are
+stored in `reports/primary_split_summary.csv`.
 
-```bash
-python train.py
+## Leakage policy
+
+At prediction cutoff `t`, every input must have `timestamp <= t`:
+
+- customer profile: last customer record known at `t`;
+- asset metadata: last asset record known at `t`;
+- prices: history ending at `t`;
+- holdings: cumulative Buy units minus Sell units through `t`;
+- candidate assets: assets known at `t` minus assets currently held at `t`;
+- node ID mapping: fitted on Train only by default.
+
+Validation and Test never determine which investors/assets remain in Train.
+`limit_prices.profitability` is kept for reference but is never used as a
+point-in-time model feature because it summarizes a future-spanning interval.
+
+FAR-Trans reuses `transactionID` across customers. The correct event key is:
+
+```text
+(customerID, transactionID)
 ```
 
-Evaluate
+Dropping rows by `transactionID` alone removes valid events and is prohibited by
+the tests and validator.
 
-```bash
-python evaluate.py
+## Temporal graph
+
+Each transaction is a directed temporal edge from an investor to an asset:
+
+```text
+customer --[Buy/Sell, timestamp, units, totalValue]--> asset
 ```
 
----
+```python
+from src.data import build_temporal_graph_events
 
-## Research Contribution
+events = build_temporal_graph_events(transactions, as_of="2021-12-31 23:59:59")
+monthly_windows = events.frame.groupby(events.frame.timestamp.dt.to_period("M"))
 
-This project investigates the application of temporal graph neural networks in personalised investment recommendation.
+# Optional: requires torch and torch-geometric
+temporal_data = events.to_pyg_temporal_data()
+```
 
-The research compares traditional recommendation approaches with temporal graph learning models to better understand how dynamic user behaviour influences recommendation quality in financial applications.
+Assets use a node-index offset after all customer nodes, so the bipartite node
+spaces never collide. Event features are local to the transaction and require no
+future-fitted normalization.
 
----
+## Loader for baselines and TGN
 
-## Authors
+```python
+from src.data import FARTransLoader
 
-- **Bui Thi Quynh Nhu**
+loader = FARTransLoader()
+mapping = loader.fit_train_mapping()
 
-- **Le Phuong Uyen** 
+# Memory-bounded pandas batches
+for batch in loader.iter_transaction_batches(
+    "train", batch_size=65_536, mapping=mapping
+):
+    train_step(batch)
 
----
-## Contributions
+# Same mapping for a popularity/BPR/LightGCN-style sparse input
+baseline = loader.load_baseline_interactions("train", mapping=mapping)
 
-This project was developed collaboratively as an undergraduate thesis.
+# Same indexed events for a temporal graph model
+graph = loader.load_temporal_graph_events("train", mapping=mapping)
+```
 
-### Bui Thi Quynh Nhu
+For Validation/Test, cold-start rows outside the Train mapping raise an error by
+default. Set `drop_unknown=True` only when reporting a separate warm-start
+metric; the checkpoint report records how many rows are excluded.
 
-- Data preprocessing
-- Temporal graph construction
-- Temporal Graph Network (TGN)
-- Market encoder (TCN)
-- Risk-aware fusion
-- Multi-task learning
-- Evaluation metrics
-- Ablation study
-- Experimental analysis
+## Repository structure
 
-### Le Phuong Uyen
-
-- Data loading pipeline
-- Baseline models
-- Experiment tracking
-- Training pipeline optimisation
-- Evaluation automation
-- API & Dashboard prototype
-
----
-## Supervisor
-
-**PhD. Ho Thi Linh**
-
----
+```text
+src/data/clean.py          six-file cleaning and conflict policy
+src/data/snapshot.py       point-in-time entity/price snapshots
+src/data/splitter.py       primary and rolling temporal splits
+src/data/state.py          holdings and candidate state
+src/data/graph.py          temporal events and graph snapshots
+src/data/loader.py         batch, baseline, and graph loaders
+src/data/validator.py      schema and leakage checks
+src/data/build_dataset.py  end-to-end Checkpoint 1 command
+tests/                     regression and leakage tests
+docs/                      schema and protocol decisions
+reports/                   small reports generated from the full dataset
+```
 
 ## License
 
-This repository is intended for academic and portfolio purposes only.
-
-The source code may not be copied, redistributed, or used in other academic submissions without permission from the author.
-
-Copyright © 2026 Bui Thi Quynh Nhu and Le Phuong Uyen.
-
-This repository is part of an undergraduate thesis project.
-All rights reserved.
-
----
-
-## Acknowledgements
-
-I would like to express my sincere gratitude to my supervisor for their continuous guidance and support throughout this research.
-
-Special thanks to Ton Duc Thang University for providing the opportunity and academic environment to conduct this undergraduate thesis.
-
----
-## Citation
-
-If you use the FAR-Trans dataset, please cite the original publication:
-
-### Thesis Repository
-
-```bibtex
-@misc{bui2026investment,
-  title={Personalised Investment Recommendation System using Temporal Graph Networks},
-  author={Bui, Thi Quynh Nhu, Le Phuong Uyen},
-  year={2026},
-  howpublished={GitHub repository},
-  url={https://github.com/emmybui/investment-recommendation-system}
-}
-```
-
-### FAR-Trans Dataset
-
-```bibtex
-@article{sanzcruzado2024fartrans,
-  title={FAR-Trans: An Investment Dataset for Financial Asset Recommendation},
-  author={Sanz-Cruzado, Javier and Droukas, Nikolaos and McCreadie, Richard},
-  year={2024},
-  journal={arXiv preprint arXiv:2407.08692}
-}
-```
+Licensed under the Apache License 2.0. FAR-Trans remains subject to its own
+dataset terms and is not redistributed in this repository.

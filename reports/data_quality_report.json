@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [],
+  "stats": {
+    "customers": {
+      "rows": 32468,
+      "columns": 8,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "assets": {
+      "rows": 833,
+      "columns": 9,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "markets": {
+      "rows": 38,
+      "columns": 8,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "close_prices": {
+      "rows": 703302,
+      "columns": 3,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "limit_prices": {
+      "rows": 806,
+      "columns": 6,
+      "missing_cells": 0,
+      "duplicate_rows": 0
+    },
+    "transactions": {
+      "rows": 388048,
+      "columns": 9,
+      "missing_cells": 0,
+      "duplicate_rows": 0,
+      "globally_reused_transaction_ids": 23388,
+      "min_timestamp": "2018-01-02 00:00:00",
+      "max_timestamp": "2022-11-30 00:00:00"
+    }
+  }
+}
